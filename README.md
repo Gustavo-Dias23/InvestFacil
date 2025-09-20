@@ -14,7 +14,7 @@ Este é um aplicativo móvel, construído com React Native e Expo, que simula um
 * [Como Executar o Projeto](#-como-executar-o-projeto)
 * [Guia de Teste e Funcionalidades](#-guia-de-teste-e-funcionalidades)
 * [Credenciais para Acesso](#-credenciais-para-acesso)
-* [Autor](#-autor)
+* [Imagens do Projeto](#-imagens-do-projeto)
 
 ---
 
