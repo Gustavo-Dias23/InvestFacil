@@ -114,5 +114,20 @@ Para facilitar a correção, siga este roteiro para testar todas as funcionalida
     * **Resultado Esperado:** O aplicativo deve limpar a sessão e te levar de volta para a **tela de Login**.
 
 ---
+## Imagens do projeto
+
+**Tela de login**
+
+<img width="461" height="786" alt="image" src="https://github.com/user-attachments/assets/fd45bdb9-4006-49e2-87a4-050a5e18a654" />
+
+**Tela de quiz**
+
+<img width="449" height="782" alt="image" src="https://github.com/user-attachments/assets/2ade9030-28c9-497c-9dcf-79fa5fe3365f" />
+
+**Tela de investimentos sugeridos**
+
+<img width="450" height="777" alt="image" src="https://github.com/user-attachments/assets/bf79863c-c4bc-421b-9922-93169c05cad2" />
+
+
 
 
