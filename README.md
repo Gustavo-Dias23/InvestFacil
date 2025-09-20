@@ -14,6 +14,7 @@ Este é um aplicativo móvel, construído com React Native e Expo, que simula um
 * [Como Executar o Projeto](#-como-executar-o-projeto)
 * [Guia de Teste e Funcionalidades](#-guia-de-teste-e-funcionalidades)
 * [Credenciais para Acesso](#credenciais-para-acesso)
+* [Participantes do grupo](#participantes-do-grupo)
 * [Imagens do Projeto](#imagens-do-projeto)
 
 ---
@@ -114,6 +115,16 @@ Para facilitar a correção, siga este roteiro para testar todas as funcionalida
     * **Resultado Esperado:** O aplicativo deve limpar a sessão e te levar de volta para a **tela de Login**.
 
 ---
+
+## Participantes do grupo
+| Nome                 | RM      |
+| -------------------- | ------- |
+| Leonardo Moreira Valério | RM550988  |
+| Breno Silva   | RM97864    |
+| Enrico Marquez   | RM99325    |
+| Joel Barros   | RM550378   |
+| Gustavo Dias   | RM550820  |
+
 ## Imagens do projeto
 
 **Tela de login**
