@@ -9,12 +9,12 @@ Este é um aplicativo móvel, construído com React Native e Expo, que simula um
 ## 📋 Índice
 
 * [Funcionalidades Principais](#-funcionalidades-principais)
-* [Tecnologias Utilizadas](#-tecnologias-utilizadas)
-* [Pré-requisitos](#-pré-requisitos)
+* [Tecnologias Utilizadas](#%EF%B8%8F-tecnologias-utilizadas)
+* [Pré-requisitos](#%EF%B8%8F-pré-requisitos)
 * [Como Executar o Projeto](#-como-executar-o-projeto)
 * [Guia de Teste e Funcionalidades](#-guia-de-teste-e-funcionalidades)
-* [Credenciais para Acesso](#-credenciais-para-acesso)
-* [Imagens do Projeto](#-imagens-do-projeto)
+* [Credenciais para Acesso](#credenciais-para-acesso)
+* [Imagens do Projeto](#imagens-do-projeto)
 
 ---
 
