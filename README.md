@@ -111,5 +111,3 @@ Para executar este projeto localmente, siga os passos abaixo.
 
 
 Projeto desenvolvido como parte de projeto acadêmico da FIAP.
-
-Desenvolvido por **Gustavo Dias**.
