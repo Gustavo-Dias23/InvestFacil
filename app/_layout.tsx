@@ -1,57 +1,67 @@
 import { Stack, useRouter, useSegments } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ActivityIndicator, View } from 'react-native';
+import { onAuthStateChanged, User } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig';
 
 export default function RootLayout() {
+  const [user, setUser] = useState<User | null>(null);
+  const [profileExists, setProfileExists] = useState(false);
   const [isReady, setReady] = useState(false);
-  const [isAuthenticated, setAuthenticated] = useState(false);
-  const [profileExists, setProfileExists] = useState(false); // Novo estado para o perfil
   const router = useRouter();
   const segments = useSegments();
 
   useEffect(() => {
-    const checkAuthStatus = async () => {
-      try {
-        const token = await AsyncStorage.getItem('user_token');
-        const profile = await AsyncStorage.getItem('user_profile'); // Verifica também o perfil
-
-        if (token) {
-          setAuthenticated(true);
-        }
-        if (profile) {
-          setProfileExists(true);
-        }
-      } catch (error) {
-        console.error("Erro ao verificar status de autenticação", error);
-      } finally {
-        setReady(true);
+    // Listener do Firebase que observa o estado de autenticação
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      if (currentUser) {
+        // Se o usuário está logado, define o estado do usuário
+        setUser(currentUser);
+        // E ENTÃO, verifica se o perfil existe no Firestore
+        const profileRef = doc(db, 'profiles', currentUser.uid);
+        const profileSnap = await getDoc(profileRef);
+        setProfileExists(profileSnap.exists());
+      } else {
+        // Se o usuário fez logout, reseta ambos os estados
+        setUser(null);
+        setProfileExists(false);
       }
-    };
+      
+      // *** A CORREÇÃO ESTÁ AQUI ***
+      // Só marca o app como "pronto" DEPOIS que todas as verificações (auth e perfil) foram concluídas.
+      setReady(true);
+    });
 
-    checkAuthStatus();
-  }, []);
+    // Limpa o listener para evitar vazamentos de memória
+    return () => unsubscribe();
+  }, []); // O array vazio garante que o listener seja configurado apenas uma vez
 
   useEffect(() => {
-    if (!isReady) return;
+    if (!isReady) {
+      // Não faz nada até que a verificação inicial esteja 100% completa
+      return; 
+    }
 
-    const inApp = segments.length > 0; // Verifica se estamos fora da tela inicial (index)
+    const inApp = segments.length > 0;
 
-    if (isAuthenticated) {
+    if (user) {
+      // Usuário está logado
       if (profileExists) {
-        // Se tem token E perfil, a home é o portfólio
+        // Se tem usuário E perfil, a home é o portfólio
         router.replace('/portfolio');
       } else {
-        // Se tem token mas NÃO tem perfil, força o quiz
+        // Se tem usuário mas NÃO tem perfil, força o quiz
         router.replace('/quiz');
       }
-    } else if (!isAuthenticated && inApp) {
-      // Se não tem token e tenta acessar qualquer tela, volta pro login
+    } else if (!user && inApp) {
+      // Se não tem usuário e tenta acessar qualquer tela interna, volta para o login
       router.replace('/');
     }
-  }, [isReady, isAuthenticated, profileExists]);
+  }, [isReady, user, profileExists]); // Executa essa lógica sempre que um desses estados mudar
 
   if (!isReady) {
+    // Mostra um loading enquanto o app verifica o status pela primeira vez
     return <ActivityIndicator size="large" style={{ flex: 1, justifyContent: 'center' }} />;
   }
 
@@ -60,6 +70,8 @@ export default function RootLayout() {
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="quiz" options={{ title: 'Seu Perfil de Investidor', headerLeft: () => null, gestureEnabled: false }} />
       <Stack.Screen name="portfolio" options={{ title: 'Sua Carteira Recomendada', headerLeft: () => null, gestureEnabled: false }} />
+      <Stack.Screen name="goals" options={{ title: 'Minhas Metas' }} />
+      <Stack.Screen name="goal-detail" options={{ title: 'Detalhes da Meta' }} />
     </Stack>
   );
 }

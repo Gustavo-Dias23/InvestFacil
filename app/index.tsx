@@ -1,56 +1,79 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Button, Alert } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Button, Pressable, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../firebaseConfig';
 
-export default function LoginScreen() {
+export default function AuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  // --- NOVA MUDANÇA 1: Estado para o tipo de erro ---
+  const [errorType, setErrorType] = useState<'validation' | 'network' | null>(null);
   const router = useRouter();
 
-  const handleLogin = async () => {
-    // 1. Log para ver se a função começou
-    console.log('--- Iniciando handleLogin ---');
-    console.log('Email digitado:', email);
-    console.log('Senha digitada:', password);
+  const handleAuth = async () => {
+    // Limpa erros antigos ao tentar novamente
+    setErrorMessage('');
+    setErrorType(null);
 
-    const userValido = 'aluno@fiap.com.br';
-    const senhaValida = '12345';
+    if (!email || !password) {
+      setErrorType('validation');
+      setErrorMessage('Por favor, preencha o email e a senha.');
+      return;
+    }
+    setLoading(true);
 
-    if (email.toLowerCase() === userValido && password === senhaValida) {
-      // 2. Log para login bem-sucedido
-      console.log('Credenciais válidas! Tentando salvar no AsyncStorage e navegar...');
+    const performAuth = isLogin ? signInWithEmailAndPassword : createUserWithEmailAndPassword;
+
+    try {
+      await performAuth(auth, email, password);
+      // Sucesso, o _layout cuidará do resto
+    } catch (error: any) {
+      console.error(`Erro em ${isLogin ? 'Login' : 'Cadastro'}:`, error.code);
       
-      try {
-        // Navega PRIMEIRO para dar feedback rápido ao usuário
-        router.replace('/quiz');
-        
-        // Depois, salva a sessão. Isso evita que o app trave esperando.
-        await AsyncStorage.setItem('user_token', 'seu-token-de-autenticacao');
-
-        // 3. Log para sucesso no AsyncStorage
-        console.log('Sessão salva com sucesso!');
-
-      } catch (error) {
-        // 4. Log para erro no AsyncStorage
-        console.error('Erro ao salvar no AsyncStorage:', error);
-        Alert.alert('Erro', 'Houve um problema ao salvar sua sessão.');
+      // --- NOVA MUDANÇA 2: Identifica o tipo de erro ---
+      if (error.code === 'auth/network-request-failed') {
+        setErrorType('network');
+        setErrorMessage('Falha na conexão. Verifique sua internet e tente novamente.');
+      } else {
+        setErrorType('validation');
+        let friendlyErrorMessage = 'Ocorreu um erro desconhecido.';
+        if (isLogin) {
+          if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+            friendlyErrorMessage = 'Email ou senha inválidos.';
+          }
+        } else {
+          if (error.code === 'auth/email-already-in-use') {
+            friendlyErrorMessage = 'Este email já está em uso.';
+          } else if (error.code === 'auth/weak-password') {
+            friendlyErrorMessage = 'A senha precisa ter pelo menos 6 caracteres.';
+          } else if (error.code === 'auth/invalid-email') {
+            friendlyErrorMessage = 'O formato do email é inválido.';
+          }
+        }
+        setErrorMessage(friendlyErrorMessage);
       }
-    } else {
-      // 5. Log para credenciais inválidas
-      console.log('Credenciais inválidas. Exibindo alerta.');
-      Alert.alert('Login Falhou', 'Email ou senha inválidos.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>InvestFácil</Text>
+      
       <TextInput
         style={styles.input}
         placeholder="E-mail"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          setErrorMessage('');
+          setErrorType(null);
+        }}
         keyboardType="email-address"
         autoCapitalize="none"
       />
@@ -58,10 +81,40 @@ export default function LoginScreen() {
         style={styles.input}
         placeholder="Senha"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          setErrorMessage('');
+          setErrorType(null);
+        }}
         secureTextEntry
       />
-      <Button title="Entrar" onPress={handleLogin} />
+
+      {errorMessage ? (
+        <Text style={styles.errorText}>{errorMessage}</Text>
+      ) : null}
+
+      {loading ? (
+        <ActivityIndicator size="large" color="#007bff" />
+      ) : (
+        <>
+          {/* --- NOVA MUDANÇA 3: Renderização condicional dos botões --- */}
+          {errorType === 'network' ? (
+            <View style={styles.buttonContainer}>
+              <Button title="Tentar Novamente" onPress={handleAuth} color="#ff8c00" />
+            </View>
+          ) : (
+            <View style={styles.buttonContainer}>
+              <Button title={isLogin ? "Entrar" : "Cadastrar"} onPress={handleAuth} />
+            </View>
+          )}
+
+          <Pressable onPress={() => setIsLogin(!isLogin)} style={styles.toggleButton}>
+            <Text style={styles.toggleText}>
+              {isLogin ? "Não tem uma conta? Cadastre-se" : "Já tem uma conta? Faça login"}
+            </Text>
+          </Pressable>
+        </>
+      )}
     </View>
   );
 }
@@ -88,5 +141,22 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     borderWidth: 1,
     borderColor: '#ddd',
+  },
+  buttonContainer: {
+    width: '100%',
+    marginTop: 10,
+  },
+  toggleButton: {
+    marginTop: 20,
+  },
+  toggleText: {
+    color: '#007bff',
+    fontSize: 16,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 14,
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });

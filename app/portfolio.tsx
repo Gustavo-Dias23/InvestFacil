@@ -1,8 +1,11 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, Button, ActivityIndicator } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, ScrollView, Button, ActivityIndicator, Alert } from 'react-native';
+import { signOut } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig'; // Importando do Firebase
 
+// --- Dados da Carteira (sem alterações) ---
 const portfolioData = {
   Conservador: {
     title: 'Carteira Conservadora',
@@ -34,40 +37,75 @@ const portfolioData = {
     ],
   },
 };
+// --------------------
+
+type ProfileName = keyof typeof portfolioData;
 
 export default function PortfolioScreen() {
   const router = useRouter();
-  const [userProfile, setUserProfile] = useState<keyof typeof portfolioData | null>(null);
+  const [userProfileName, setUserProfileName] = useState<ProfileName | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const loadProfile = async () => {
-      const profileFromStorage = await AsyncStorage.getItem('user_profile') as keyof typeof portfolioData;
-      setUserProfile(profileFromStorage);
-      setIsLoading(false);
+      const user = auth.currentUser;
+      if (!user) {
+        // Se por algum motivo chegar aqui sem usuário, volta para o login
+        router.replace('/');
+        return;
+      }
+      
+      try {
+        const profileRef = doc(db, 'profiles', user.uid);
+        const docSnap = await getDoc(profileRef);
+
+        if (docSnap.exists()) {
+          // Extrai o nome do perfil ('Conservador', 'Moderado', etc.) do documento
+          const profileData = docSnap.data();
+          setUserProfileName(profileData.profileName as ProfileName);
+        } else {
+          // Se o documento não existe, algo está errado. Oferece refazer o quiz.
+          console.log("Nenhum perfil encontrado para o usuário!");
+          setUserProfileName(null);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar perfil do Firestore:", error);
+        Alert.alert("Erro", "Não foi possível carregar seu perfil.");
+      } finally {
+        setIsLoading(false);
+      }
     };
+    
     loadProfile();
   }, []);
 
   const handleLogout = async () => {
-    await AsyncStorage.multiRemove(['user_token', 'user_profile']);
-    router.replace('/');
+    try {
+      await signOut(auth);
+      // O listener no _layout.tsx cuidará do redirecionamento para a tela de login.
+    } catch (error) {
+      console.error("Erro ao fazer logout:", error);
+      Alert.alert("Erro", "Não foi possível sair. Tente novamente.");
+    }
   };
 
   if (isLoading) {
     return <ActivityIndicator size="large" style={styles.container} />;
   }
 
-  if (!userProfile || !portfolioData[userProfile]) {
+  if (!userProfileName || !portfolioData[userProfileName]) {
     return (
       <View style={styles.container}>
         <Text style={styles.title}>Perfil não encontrado</Text>
-        <Button title="Refazer Quiz" onPress={() => router.replace('/quiz')} />
+        <Text style={styles.description}>Não conseguimos carregar sua carteira.</Text>
+        <View style={{marginTop: 20}}>
+          <Button title="Refazer Quiz" onPress={() => router.replace('/quiz')} />
+        </View>
       </View>
     );
   }
 
-  const userPortfolio = portfolioData[userProfile];
+  const userPortfolio = portfolioData[userProfileName];
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -77,6 +115,7 @@ export default function PortfolioScreen() {
       </View>
       <Text style={styles.assetsTitle}>Composição da Carteira:</Text>
       {userPortfolio.assets.map((asset, index) => (
+        
         <View key={index} style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.assetName}>{asset.name}</Text>
@@ -85,6 +124,10 @@ export default function PortfolioScreen() {
           <Text style={styles.assetExplanation}>{asset.explanation}</Text>
         </View>
       ))}
+      <View style={styles.goalsButtonContainer}>
+        <Button title="Ver Minhas Metas Financeiras" onPress={() => router.push('/goals')} />
+      </View>
+  
       <View style={styles.logoutButtonContainer}>
         <Button title="Sair" color="red" onPress={handleLogout} />
       </View>
@@ -92,9 +135,9 @@ export default function PortfolioScreen() {
   );
 }
 
-
+// --- Estilos (sem alterações) ---
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     padding: 20,
     backgroundColor: '#f5f5f5',
@@ -160,8 +203,12 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   logoutButtonContainer: {
-    marginTop: 30,
+    marginTop: 20, 
     marginBottom: 20,
+    marginHorizontal: 10,
+  },
+  goalsButtonContainer: {
+    marginTop: 30,
     marginHorizontal: 10,
   },
 });

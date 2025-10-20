@@ -1,9 +1,10 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, Pressable } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { View, Text, StyleSheet, Pressable, Alert, ActivityIndicator } from 'react-native';
+import { doc, setDoc } from 'firebase/firestore';
+import { auth, db } from '../firebaseConfig'; // Importando do Firebase
 
-// --- Dados do Quiz ---
+// --- Dados do Quiz (sem alterações) ---
 const questions = [
   {
     question: 'Qual é o seu principal objetivo ao investir?',
@@ -35,6 +36,7 @@ const questions = [
 export default function QuizScreen() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [totalScore, setTotalScore] = useState(0);
+  const [loading, setLoading] = useState(false); // Estado de carregamento
   const router = useRouter();
 
   const handleAnswer = (value: number) => {
@@ -51,7 +53,7 @@ export default function QuizScreen() {
   };
 
   const calculateProfile = async (finalScore: number) => {
-    // 1. A variável 'userProfile' é CRIADA aqui.
+    setLoading(true);
     let userProfile = 'Conservador';
     if (finalScore >= 5 && finalScore <= 7) {
       userProfile = 'Moderado';
@@ -59,19 +61,48 @@ export default function QuizScreen() {
       userProfile = 'Agressivo';
     }
 
-    try {
-      // 2. O perfil é salvo no AsyncStorage.
-      await AsyncStorage.setItem('user_profile', userProfile);
+    // Pega o usuário atualmente logado
+    const user = auth.currentUser;
+    if (!user) {
+      Alert.alert("Erro", "Nenhum usuário autenticado encontrado. Por favor, faça login novamente.");
+      setLoading(false);
+      router.replace('/');
+      return;
+    }
 
-      // 3. A navegação acontece usando a variável que acabamos de criar.
-      router.replace({ pathname: '/portfolio', params: { profile: userProfile } });
+    try {
+      // Cria uma referência para um novo documento na coleção 'profiles'
+      // O ID do documento será o mesmo UID (ID único) do usuário no Firebase Auth
+      const profileRef = doc(db, 'profiles', user.uid);
+      
+      // Salva o perfil no Firestore
+      await setDoc(profileRef, {
+        profileName: userProfile,
+        score: finalScore,
+        createdAt: new Date(), // Adiciona um timestamp de quando o perfil foi criado
+        userId: user.uid,
+      });
+
+      // A navegação agora é tratada pelo _layout.tsx, que vai detectar a mudança
+      // no 'profileExists' e redirecionar para /portfolio.
+      // Podemos forçar uma navegação aqui também para garantir.
+      router.replace({ pathname: '/portfolio' });
 
     } catch (error) {
-      console.error("Erro ao salvar o perfil", error);
+      console.error("Erro ao salvar o perfil no Firestore", error);
+      Alert.alert("Erro", "Não foi possível salvar seu perfil. Tente novamente.");
+      setLoading(false);
     }
   };
     
-  // AS LINHAS COM ERRO QUE ESTAVAM AQUI FORAM REMOVIDAS.
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" />
+        <Text style={{ marginTop: 20, fontSize: 18 }}>Salvando seu perfil...</Text>
+      </View>
+    );
+  }
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -97,6 +128,7 @@ export default function QuizScreen() {
   );
 }
 
+// Estilos (mantidos, mas adicionei o texto de loading)
 const styles = StyleSheet.create({
   container: {
     flex: 1,

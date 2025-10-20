@@ -1,118 +1,104 @@
-# InvestFácil - Assessor de Investimentos Virtual
+# InvestFácil 📈
 
-Projeto desenvolvido para a Global Solution da matéria de **Mobile Development and IoT**.
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
+![React Native](https://img.shields.io/badge/React%20Native-61DAFB?logo=react&logoColor=black)
+![Expo](https://img.shields.io/badge/Expo-000020?logo=expo&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 
-Este é um aplicativo móvel, construído com React Native e Expo, que simula um assessor de investimentos virtual. O objetivo é identificar o perfil de investidor do usuário através de um quiz e, com base nisso, recomendar uma carteira de investimentos personalizada.
+InvestFácil é um aplicativo móvel, construído com React Native e Expo, que simula um assessor de investimentos virtual. O objetivo é identificar o perfil de investidor do usuário através de um quiz e, com base nisso, recomendar uma carteira de investimentos personalizada e ajudar no gerenciamento de metas financeiras.
 
----
+## 🚀 Funcionalidades Principais
 
-## 📋 Índice
+O aplicativo oferece um fluxo completo para o usuário, desde o cadastro até o acompanhamento de seus objetivos:
 
-* [Funcionalidades Principais](#-funcionalidades-principais)
-* [Tecnologias Utilizadas](#%EF%B8%8F-tecnologias-utilizadas)
-* [Pré-requisitos](#%EF%B8%8F-pré-requisitos)
-* [Como Executar o Projeto](#-como-executar-o-projeto)
-* [Guia de Teste e Funcionalidades](#-guia-de-teste-e-funcionalidades)
-* [Credenciais para Acesso](#credenciais-para-acesso)
-* [Participantes do grupo](#participantes-do-grupo)
-* [Imagens do Projeto](#imagens-do-projeto)
+* **Autenticação de Usuários:** Sistema completo de Cadastro e Login utilizando **Firebase Authentication**.
+* **Quiz de Perfil de Investidor:** Um questionário dinâmico para classificar o usuário como Conservador, Moderado ou Agressivo.
+* **Recomendação de Carteira:** Com base no resultado do quiz, o app exibe uma carteira de investimentos personalizada com a alocação de ativos e explicações detalhadas.
+* **Gerenciamento de Metas Financeiras:** Funcionalidade de CRUD (Criar, Ler, Atualizar e Deletar) completa para que o usuário possa cadastrar e gerenciar seus objetivos financeiros, com os dados salvos no **Cloud Firestore**.
+* **Tratamento de Erros e Conexão:** Interface resiliente que informa o usuário sobre falhas de validação ou de conexão, com um mecanismo de "Tentar Novamente" em caso de interrupções de rede.
 
----
+## 📱 Telas do Aplicativo
 
-## ✨ Funcionalidades Principais
+*(Dica: Adicione aqui screenshots do seu aplicativo em funcionamento!)*
 
-* **Fluxo de Autenticação Completo:** Sistema de login com persistência de sessão utilizando `AsyncStorage`. O aplicativo "lembra" do usuário logado.
-* **Quiz de Suitability:** Questionário interativo para definir o perfil de investidor do usuário em uma de três categorias: Conservador, Moderado ou Agressivo.
-* **Recomendação de Carteira:** Exibição de um portfólio de investimentos detalhado e personalizado, com explicações sobre cada ativo, de acordo com o perfil do usuário.
-* **Arquitetura Moderna:** Construído com Expo Router, utilizando uma estrutura de rotas baseada em arquivos para uma navegação limpa e organizada.
+| Login / Cadastro                               | Quiz de Perfil                                     | Carteira Recomendada                           |
+| ---------------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
+| ![Tela de Login](URL_DA_SUA_IMAGEM_DE_LOGIN_AQUI) | ![Tela do Quiz](URL_DA_SUA_IMAGEM_DO_QUIZ_AQUI) | ![Tela da Carteira](URL_DA_SUA_IMAGEM_DA_CARTEIRA_AQUI) |
 
----
+| Lista de Metas                                 | Detalhes da Meta                                   |
+| ---------------------------------------------- | -------------------------------------------------- |
+| ![Tela de Metas](URL_DA_SUA_IMAGEM_DE_METAS_AQUI) | ![Tela de Detalhe](URL_DA_SUA_IMAGEM_DE_DETALHE_AQUI) |
+
 
 ## 🛠️ Tecnologias Utilizadas
 
-* [React Native](https://reactnative.dev/)
-* [Expo](https://expo.dev/)
-* [TypeScript](https://www.typescriptlang.org/)
-* [Expo Router](https://docs.expo.dev/router/introduction/) (para navegação)
-* [AsyncStorage](https://react-native-async-storage.github.io/async-storage/) (para persistência de dados)
+* **React Native:** Framework para desenvolvimento de aplicativos móveis multiplataforma.
+* **Expo:** Plataforma e conjunto de ferramentas para facilitar o desenvolvimento e build com React Native.
+* **Firebase:** Utilizado para:
+    * **Authentication:** Gerenciamento de sessões de usuário.
+    * **Cloud Firestore:** Banco de dados NoSQL para salvar perfis e metas financeiras.
+* **TypeScript:** Superset do JavaScript que adiciona tipagem estática ao código.
+* **Expo Router:** Sistema de navegação baseado em arquivos para criar rotas no aplicativo.
 
----
+## ⚙️ Como Executar o Projeto
 
-## ⚙️ Pré-requisitos
+Para executar este projeto localmente, siga os passos abaixo.
 
-Antes de começar, certifique-se de que você tem as seguintes ferramentas instaladas em seu ambiente de desenvolvimento:
+### Pré-requisitos
 
-* **Node.js** (versão LTS recomendada)
-* **Git**
-* **Android Studio** com um **Emulador Android** configurado e pronto para uso.
+* [Node.js](https://nodejs.org/en/) (versão LTS recomendada)
+* [npm](https://www.npmjs.com/) ou [yarn](https://yarnpkg.com/)
+* [Expo Go](https://expo.dev/go) app no seu celular ou um emulador Android/iOS configurado.
 
----
+### Passos de Instalação
 
-## 🚀 Como Executar o Projeto
+1.  **Clone o repositório:**
+    ```bash
+    git clone [https://github.com/Gustavo-Dias23/InvestFacil.git](https://github.com/Gustavo-Dias23/InvestFacil.git)
+    cd InvestFacil
+    ```
 
-Siga os passos abaixo para clonar, instalar as dependências e executar o aplicativo no emulador.
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
 
-**1. Clone o Repositório**
-Abra seu terminal e execute o seguinte comando:
-```bash
-git clone [URL_DO_SEU_REPOSITORIO_AQUI]
-```
+3.  **Configure o Firebase:**
+    * Crie um projeto no [console do Firebase](https://firebase.google.com/).
+    * Na seção **Authentication**, ative o provedor de login por **E-mail/senha**.
+    * Na seção **Cloud Firestore**, crie um novo banco de dados (inicie no **modo de teste**).
+    * Na raiz do projeto, crie um arquivo chamado `firebaseConfig.js`.
+    * Copie e cole o seguinte código neste novo arquivo e preencha com as suas chaves do Firebase (você pode encontrá-las nas configurações do seu projeto no Firebase, ao registrar um novo app da Web):
+        ```javascript
+        // Importe as funções necessárias
+        import { initializeApp } from "firebase/app";
+        import { getAuth } from "firebase/auth";
+        import { getFirestore } from "firebase/firestore";
 
-**2. Navegue até a Pasta do Projeto**
-```bash
-cd investFacil
-```
+        // Suas chaves de configuração do Firebase
+        const firebaseConfig = {
+          apiKey: "SUA_API_KEY",
+          authDomain: "SEU_AUTH_DOMAIN",
+          projectId: "SEU_PROJECT_ID",
+          storageBucket: "SEU_STORAGE_BUCKET",
+          messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+          appId: "SEU_APP_ID"
+        };
 
-**3. Instale as Dependências**
-Execute o comando abaixo para instalar todas as bibliotecas necessárias para o projeto.
-```bash
-npm install
-```
+        // Inicialize o Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-**4. Execute o Aplicativo**
-Certifique-se de que seu emulador Android já esteja aberto e funcionando. Em seguida, execute o comando para iniciar o servidor do Expo:
-```bash
-npx expo start
-```
+        export { auth, db };
+        ```
 
-**5. Abra no Emulador**
-Com o servidor do Expo rodando, o terminal exibirá um menu de opções. Pressione a tecla `a` para que o aplicativo seja instalado e aberto automaticamente no emulador Android.
-
----
-
-## 🧪 Guia de Teste e Funcionalidades
-
-Para facilitar a correção, siga este roteiro para testar todas as funcionalidades implementadas.
-
-### Credenciais para Acesso
-
-| Email                  | Senha |
-| ---------------------- | ----- |
-| `aluno@fiap.com.br`    | `12345` |
-
-### Roteiro de Testes
-
-1.  **Teste de Login:**
-    * Na tela inicial, insira as credenciais acima e clique em "Entrar".
-    * **Resultado Esperado:** O aplicativo deve te levar para a tela de **Quiz**.
-
-2.  **Teste do Quiz de Perfil:**
-    * Responda às 3 perguntas do quiz.
-    * **Resultado Esperado:** Ao responder a última pergunta, o aplicativo deve calcular seu perfil e te levar automaticamente para a tela de **Portfólio**, exibindo a carteira correspondente.
-
-3.  **Teste de Conteúdo Dinâmico:**
-    * No Portfólio, clique em "Sair".
-    * Faça o login novamente e responda ao quiz com opções diferentes para obter um novo perfil (ex: tente obter o perfil "Agressivo").
-    * **Resultado Esperado:** A tela de Portfólio deve exibir uma carteira completamente diferente, adequada ao novo perfil.
-
-4.  **Teste de Persistência de Sessão:**
-    * Com a tela de Portfólio aberta, feche o aplicativo completamente.
-    * Abra o aplicativo novamente.
-    * **Resultado Esperado:** O aplicativo deve pular a tela de Login e o Quiz, abrindo diretamente na sua **tela de Portfólio**, pois ele "lembrou" da sua sessão e do seu perfil.
-
-5.  **Teste de Logout:**
-    * Na tela de Portfólio, clique no botão vermelho "Sair".
-    * **Resultado Esperado:** O aplicativo deve limpar a sessão e te levar de volta para a **tela de Login**.
+4.  **Execute o aplicativo:**
+    ```bash
+    npx expo start
+    ```
+    Escaneie o QR code com o aplicativo Expo Go ou execute em um emulador.
 
 ---
 
@@ -125,20 +111,7 @@ Para facilitar a correção, siga este roteiro para testar todas as funcionalida
 | Joel Barros   | RM550378   |
 | Gustavo Dias   | RM550820  |
 
-## Imagens do projeto
 
-**Tela de login**
+Projeto desenvolvido como parte de projeto acadêmico da FIAP.
 
-<img width="461" height="786" alt="image" src="https://github.com/user-attachments/assets/fd45bdb9-4006-49e2-87a4-050a5e18a654" />
-
-**Tela de quiz**
-
-<img width="449" height="782" alt="image" src="https://github.com/user-attachments/assets/2ade9030-28c9-497c-9dcf-79fa5fe3365f" />
-
-**Tela de investimentos sugeridos**
-
-<img width="450" height="777" alt="image" src="https://github.com/user-attachments/assets/bf79863c-c4bc-421b-9922-93169c05cad2" />
-
-
-
-
+Desenvolvido por **Gustavo Dias**.
