@@ -24,7 +24,7 @@ O aplicativo oferece um fluxo completo para o usuário, desde o cadastro até o 
 
 | Login / Cadastro                               | Quiz de Perfil                                     | Carteira Recomendada                           |
 | ---------------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
-| ![Tela de Login](URL_DA_SUA_IMAGEM_DE_LOGIN_AQUI) | ![Tela do Quiz](URL_DA_SUA_IMAGEM_DO_QUIZ_AQUI) | ![Tela da Carteira](URL_DA_SUA_IMAGEM_DA_CARTEIRA_AQUI) |
+| ![Tela de Login]D:\Usuarios\gusta\Área de Trabalho\FIAP | ![Tela do Quiz](URL_DA_SUA_IMAGEM_DO_QUIZ_AQUI) | ![Tela da Carteira](URL_DA_SUA_IMAGEM_DA_CARTEIRA_AQUI) |
 
 | Lista de Metas                                 | Detalhes da Meta                                   |
 | ---------------------------------------------- | -------------------------------------------------- |
