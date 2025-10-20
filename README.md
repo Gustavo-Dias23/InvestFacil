@@ -20,15 +20,13 @@ O aplicativo oferece um fluxo completo para o usuário, desde o cadastro até o 
 
 ## 📱 Telas do Aplicativo
 
-*(Dica: Adicione aqui screenshots do seu aplicativo em funcionamento!)*
+| Login / Cadastro | Quiz de Perfil | Carteira Recomendada |
+|---|---|---|
+| ![Tela de Login](./screenshots/Login.png) | ![Tela do Quiz](./screenshots/quiz.png) | ![Tela da Carteira](./screenshots/carteira.png) |
 
-| Login / Cadastro                               | Quiz de Perfil                                     | Carteira Recomendada                           |
-| ---------------------------------------------- | -------------------------------------------------- | ---------------------------------------------- |
-| ![Tela de Login]D:\Usuarios\gusta\Área de Trabalho\FIAP | ![Tela do Quiz](URL_DA_SUA_IMAGEM_DO_QUIZ_AQUI) | ![Tela da Carteira](URL_DA_SUA_IMAGEM_DA_CARTEIRA_AQUI) |
-
-| Lista de Metas                                 | Detalhes da Meta                                   |
-| ---------------------------------------------- | -------------------------------------------------- |
-| ![Tela de Metas](URL_DA_SUA_IMAGEM_DE_METAS_AQUI) | ![Tela de Detalhe](URL_DA_SUA_IMAGEM_DE_DETALHE_AQUI) |
+| Lista de Metas | Detalhes da Meta |
+|---|---|
+| ![Tela de Metas](./screenshots/metas].png) | ![Tela de Detalhe](./screenshots/detalhes.png) |
 
 
 ## 🛠️ Tecnologias Utilizadas
